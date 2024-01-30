@@ -10,26 +10,20 @@ GPIO.setup(pin_RED, GPIO.OUT)
 GPIO.setup(pin_GREEN, GPIO.OUT)
 GPIO.setup(pin_BLUE, GPIO.OUT)
 
-def all_led_on():
-    GPIO.output(pin_RED, 1)
-    GPIO.output(pin_GREEN, 1)
-    GPIO.output(pin_BLUE, 1)
-
-def all_led_off():
-    GPIO.output(pin_RED, 0)
-    GPIO.output(pin_GREEN, 0)
-    GPIO.output(pin_BLUE, 0)
-
-def fade_in_out(pin, num):
+def fade_in(pin, num):
     pwm = GPIO.PWM(pin, 100)
     pwm.start(0)
     try:
         for i in range(101):
             pwm.ChangeDutyCycle(i)
             time.sleep(num / 200)
+    finally:
+        pwm.stop()
 
-        time.sleep(num)
-
+def fade_out(pin, num):
+    pwm = GPIO.PWM(pin, 100)
+    pwm.start(100)
+    try:
         for i in range(100, -1, -1):
             pwm.ChangeDutyCycle(i)
             time.sleep(num / 200)
@@ -38,23 +32,36 @@ def fade_in_out(pin, num):
 
 def mode_1():
     print("Mode 1: 모든 LED를 켭니다.")
-    all_led_on()
+    GPIO.output(pin_RED, 1)
+    GPIO.output(pin_GREEN, 1)
+    GPIO.output(pin_BLUE, 1)
 
 def mode_2():
     print("Mode 2: 모든 LED를 끕니다.")
-    all_led_off()
+    GPIO.output(pin_RED, 0)
+    GPIO.output(pin_GREEN, 0)
+    GPIO.output(pin_BLUE, 0)
 
 def mode_3():
-    print("Mode 3: 빨간 LED가 3초 동안 밝아지고 어두워집니다.")
-    fade_in_out(pin_RED, 3)
+    print("Mode 3: 모든 LED를 3초 동안 서서히 밝게 합니다.")
+    fade_in(pin_RED, 3)
+    fade_in(pin_GREEN, 3)
+    fade_in(pin_BLUE, 3)
 
 def mode_4():
-    print("Mode 4: 초록 LED가 3초 동안 밝아지고 어두워집니다.")
-    fade_in_out(pin_GREEN, 3)
+    print("Mode 4: 모든 LED를 3초 동안 서서히 어둡게 합니다.")
+    fade_out(pin_RED, 3)
+    fade_out(pin_GREEN, 3)
+    fade_out(pin_BLUE, 3)
 
 def mode_5():
-    print("Mode 5: 파란 LED가 3초 동안 밝아지고 어두워집니다.")
-    fade_in_out(pin_BLUE, 3)
+    print("Mode 5: 모든 LED를 3초 동안 밝아졌다가 어두워집니다.")
+    fade_in(pin_RED, 1.5)  # 밝아지는 시간
+    fade_out(pin_RED, 1.5)  # 어두워지는 시간
+    fade_in(pin_GREEN, 1.5)
+    fade_out(pin_GREEN, 1.5)
+    fade_in(pin_BLUE, 1.5)
+    fade_out(pin_BLUE, 1.5)
 
 def mode_6():
     print("Mode 6: 사용자가 입력한 시간 동안 빨간, 초록, 파란 LED가 동시에 밝아지고 어두워집니다.")
