@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import keyboard
 
 buzzer = 18
 pin_RED = 4
@@ -35,7 +36,7 @@ try:
         GPIO.output(pin_RED, 0)
         GPIO.output(pin_GREEN, 0)
         GPIO.output(pin_BLUE, 0)
-        
+
         if GPIO.input(button_pin1) == GPIO.LOW:
             pwm.start(1.0)
             GPIO.output(pin_RED, 1)
@@ -46,9 +47,22 @@ try:
             note_duration = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1,
                              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1,
                              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1]
-            play_tune(scale, twinkle, note_duration)
-            pwm.stop()
             
+            try:
+                for i in range(len(twinkle)):
+                    pwm.ChangeFrequency(scale[twinkle[i]])
+
+                    if i in [6, 13, 20, 27, 34, 41]:
+                        time.sleep(note_duration[i])  # 쉼표일 경우
+                    else:
+                        time.sleep(note_duration[i])  # 음표일 경우
+                    
+                    if keyboard.is_pressed('esc'):
+                        raise KeyboardInterrupt  # 예외 발생시킴
+            except KeyboardInterrupt:
+                pwm.stop()
+                continue  # 현재 if 블록을 종료하고 다음 반복 시작
+
         elif GPIO.input(button_pin2) == GPIO.LOW:
             pwm.start(1.0)
             GPIO.output(pin_GREEN, 1)
@@ -57,9 +71,23 @@ try:
                        6, 6, 5, 5, 3, 5, 3, 2, 3, 1]
             note_duration = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 1, 0.5, 0.5,
                              0.5, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 1]
-            play_tune(scale, twinkle, note_duration)
-            pwm.stop()
             
+            try:
+                for i in range(len(twinkle)):
+                    pwm.ChangeFrequency(scale[twinkle[i]])
+
+                    if i in [6, 13, 20, 27, 34, 41]:
+                        time.sleep(note_duration[i])  # 쉼표일 경우
+                    else:
+                        time.sleep(note_duration[i])  # 음표일 경우
+                    
+                    if keyboard.is_pressed('esc'):
+                        raise KeyboardInterrupt  # 예외 발생시킴
+            except KeyboardInterrupt:
+                pwm.stop()
+                continue  # 현재 if 블록을 종료하고 다음 반복 시작
+
+
         elif GPIO.input(button_pin3) == GPIO.LOW:
             pwm.start(1.0)
             GPIO.output(pin_BLUE, 1)
@@ -67,8 +95,23 @@ try:
             twinkle = [1, 3, 5, 1, 3, 5, 6, 6, 6, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1]
             note_duration = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 
                              0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1]
-            play_tune(scale, twinkle, note_duration)
-            pwm.stop()
+            
+            try:
+                for i in range(len(twinkle)):
+                    pwm.ChangeFrequency(scale[twinkle[i]])
+
+                    if i in [6, 13, 20, 27, 34, 41]:
+                        time.sleep(note_duration[i])  # 쉼표일 경우
+                    else:
+                        time.sleep(note_duration[i])  # 음표일 경우
+                    
+                    if keyboard.is_pressed('esc'):
+                        raise KeyboardInterrupt  # 예외 발생시킴
+            except KeyboardInterrupt:
+                pwm.stop()
+                continue  # 현재 if 블록을 종료하고 다음 반복 시작
+
+
         elif GPIO.input(button_pin4) == GPIO.LOW:
             print("Button 4 pushed!")
             GPIO.output(pin_RED, 1)
